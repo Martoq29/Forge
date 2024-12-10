@@ -26,6 +26,9 @@ public class Game : MonoBehaviour
     public int amount2;
     public float amount2Profit;
 
+    public int upgradePrize;
+    public Text upgradeText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +37,24 @@ public class Game : MonoBehaviour
         scoreIncreasePerSecond = 1;
         x = 0f;
 
+        shop1prize = 25;
+        shop2prize = 125;
+        amount1 = 0;
+        amount1Profit = 1;
+        amount2 = 0;
+        amount2Profit = 5;
+
+        currentScore = PlayerPrefs.GetInt("currentScore", 0);
+        hitPower = PlayerPrefs.GetInt("hitPower", 1);
+        x = PlayerPrefs.GetInt("x", 0);
+
+        shop1prize = PlayerPrefs.GetInt("shop1prize", 25);
+        shop2prize = PlayerPrefs.GetInt("shop2prize", 125);
+        amount1 = PlayerPrefs.GetInt("amount1", 0);
+        amount1Profit = PlayerPrefs.GetInt("amount1Profit", 0);
+        amount2 = PlayerPrefs.GetInt("amount2", 0);
+        amount2Profit = PlayerPrefs.GetInt("amount2Profit", 0);
+        upgradePrize = PlayerPrefs.GetInt("upgradePrize", 50);
     }
 
     // Update is called once per frame
@@ -48,6 +69,20 @@ public class Game : MonoBehaviour
 
         amount1Text.text = "Tier 1: "+amount1+" arts $: "+amount1Profit+"/s";
         amount2Text.text = "Tier 2: " + amount2 + " arts $: " + amount2Profit + "/s";
+
+        upgradeText.text = "Cost: " + upgradePrize + " $";
+
+        PlayerPrefs.SetInt("currentScore", (int)currentScore);
+        PlayerPrefs.SetInt("hitPower", (int)hitPower);
+        PlayerPrefs.SetInt("x", (int)x);
+
+        PlayerPrefs.SetInt("shop1prize", (int)shop1prize);
+        PlayerPrefs.SetInt("shop2prize", (int)shop2prize);
+        PlayerPrefs.SetInt("amount1", (int)amount1);
+        PlayerPrefs.SetInt("amount1Profit", (int)amount1Profit);
+        PlayerPrefs.SetInt("amount2", (int)amount2);
+        PlayerPrefs.SetInt("amount2Profit", (int)amount2Profit);
+        PlayerPrefs.SetInt("upgradePrize", (int)upgradePrize);
     }
 
     public void Hit()
@@ -78,5 +113,15 @@ public class Game : MonoBehaviour
             shop2prize += 125;
         }
 
+    }
+
+    public void Upgrade()
+    {
+        if(currentScore >= upgradePrize)
+        {
+            currentScore -= upgradePrize;
+            hitPower *= 2;
+            upgradePrize *= 3;
+        }
     }
 }
