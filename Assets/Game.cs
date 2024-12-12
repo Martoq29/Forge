@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,6 +30,12 @@ public class Game : MonoBehaviour
     public int upgradePrize;
     public Text upgradeText;
 
+    public int allUpgradePrize;
+    public Text allUpgradeText;
+
+    public GameObject plusObject;
+    public Text plusText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,6 +62,9 @@ public class Game : MonoBehaviour
         amount2 = PlayerPrefs.GetInt("amount2", 0);
         amount2Profit = PlayerPrefs.GetInt("amount2Profit", 0);
         upgradePrize = PlayerPrefs.GetInt("upgradePrize", 50);
+
+        allUpgradePrize = 500;
+        
     }
 
     // Update is called once per frame
@@ -83,11 +93,24 @@ public class Game : MonoBehaviour
         PlayerPrefs.SetInt("amount2", (int)amount2);
         PlayerPrefs.SetInt("amount2Profit", (int)amount2Profit);
         PlayerPrefs.SetInt("upgradePrize", (int)upgradePrize);
+
+        allUpgradeText.text = "Cost: " + allUpgradePrize + " $";
+
+        plusText.text = "+ " + hitPower;
     }
 
     public void Hit()
     {
         currentScore += hitPower;
+
+        plusObject.SetActive(false);
+
+        plusObject.transform.position = new Vector3(Random.Range(800, 1200 + 1), Random.Range(600, 700 + 1), 0);
+
+        plusObject.SetActive(true);
+
+        StopAllCoroutines();
+        StartCoroutine(Fly());
     }
 
     public void Shop1()
@@ -123,5 +146,27 @@ public class Game : MonoBehaviour
             hitPower *= 2;
             upgradePrize *= 3;
         }
+    }
+
+    public void AllProfitsUpgrade()
+    {
+        if (currentScore >= allUpgradePrize)
+        {
+            currentScore -= allUpgradePrize;
+            x *= 2;
+            allUpgradePrize *= 3;
+            amount1Profit *= 2;
+            amount2Profit *= 2;
+        }
+    }
+
+    IEnumerator Fly()
+    {
+        for (int i = 0; i < 19; i++)
+        {
+            yield return new WaitForSeconds(0.01f);
+            plusObject.transform.position = new Vector3(plusObject.transform.position.x, plusObject.transform.position.y + 2, 0);
+        }
+        plusObject.SetActive(false);
     }
 }
