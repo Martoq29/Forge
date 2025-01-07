@@ -39,6 +39,11 @@ public class Game : MonoBehaviour
     public GameObject plusObject;
     public Text plusText;
 
+    public bool achievementScore;
+    public bool achievementShop;
+    public Image image1;
+    public Image image2;
+
     void Start()
     {
         currentScore = 0;
@@ -79,6 +84,32 @@ public class Game : MonoBehaviour
         {
             upgradeText.text = "Cost: " + upgradePrize + " $";
             allUpgradeText.text = "Cost: " + allUpgradePrize + " $";
+        }
+
+        if(currentScore >= 50)
+        {
+            achievementScore = true;
+        }
+        if(amount1 >= 2)
+        {
+            achievementShop = true;
+        }
+        if (achievementScore == true)
+        {
+            image1.color = new Color(1f, 1f, 1f, 1f);
+        }
+        else
+        {
+            image1.color = new Color(0.2f, 0.2f, 0.2f, 0.2f);
+        }
+
+        if (achievementShop == true)
+        {
+            image2.color = new Color(1f, 1f, 1f, 1f);
+        }
+        else
+        {
+            image2.color = new Color(0.2f, 0.2f, 0.2f, 0.2f);
         }
     }
 
