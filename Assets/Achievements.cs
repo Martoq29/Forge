@@ -4,9 +4,9 @@ using UnityEngine.UI;
 public class Achievements : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject achievementsPanel; // Achievements panel
-    public Transform contentParent; // Content in the Scroll View
-    public GameObject achievementPrefab; // Prefab for an achievement (Image + Text)
+    public GameObject achievementsPanel;
+    public Transform contentParent;
+    public GameObject achievementPrefab;
 
     [Header("Achievement Images")]
     public Image achievementScoreImage;
@@ -18,7 +18,7 @@ public class Achievements : MonoBehaviour
     public Image achievementPassive100Image;
     public Image achievementClickPower8Image;
     public Image achievement10kPointsImage;
-    public Image achievement2000PointsImage; // New achievement image for 2000 points
+    public Image achievement2000PointsImage;
 
     [Header("Achievement Conditions")]
     public float scoreThreshold = 50f;
@@ -30,9 +30,8 @@ public class Achievements : MonoBehaviour
     public float passiveIncome100Threshold = 100f;
     public float clickPowerMultiplierThreshold = 8f;
     public float totalScoreThreshold = 10000f;
-    public float score2000Threshold = 50000f; // New threshold for 2000 points
+    public float score2000Threshold = 50000f;
 
-    // Unlock flags
     private bool achievementScoreUnlocked = false;
     private bool achievementShopUnlocked = false;
     private bool achievement500PointsUnlocked = false;
@@ -42,27 +41,26 @@ public class Achievements : MonoBehaviour
     private bool achievementPassive100Unlocked = false;
     private bool achievementClickPower8Unlocked = false;
     private bool achievement10kPointsUnlocked = false;
-    private bool achievement2000PointsUnlocked = false; // New flag for 2000 points
+    private bool achievement2000PointsUnlocked = false;
 
-    // Reference to the Game script
     private Game gameScript;
 
     void Start()
     {
-        // Find the Game script
+
         gameScript = FindObjectOfType<Game>();
         if (gameScript == null)
         {
             Debug.LogError("Game script not found in the scene.");
         }
 
-        // Disable the achievements panel by default
+
         achievementsPanel.SetActive(false);
 
-        // Initialize achievement images as locked (dimmed)
+
         InitializeAchievementImages();
 
-        // Populate achievements list in the UI
+
         PopulateAchievements();
     }
 
@@ -70,7 +68,7 @@ public class Achievements : MonoBehaviour
     {
         if (gameScript == null) return;
 
-        // Check and unlock achievements based on conditions
+
         if (!achievementScoreUnlocked && gameScript.currentScore >= scoreThreshold)
         {
             achievementScoreUnlocked = true;
@@ -125,7 +123,7 @@ public class Achievements : MonoBehaviour
             UnlockAchievement(achievement10kPointsImage, "Earned a total of 10,000 points!");
         }
 
-        // New achievement for 2000 points
+
         if (!achievement2000PointsUnlocked && gameScript.currentScore >= score2000Threshold)
         {
             achievement2000PointsUnlocked = true;
@@ -133,9 +131,7 @@ public class Achievements : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Initialize all achievement images as locked (dimmed).
-    /// </summary>
+
     private void InitializeAchievementImages()
     {
         SetImageLocked(achievementScoreImage);
@@ -147,24 +143,17 @@ public class Achievements : MonoBehaviour
         SetImageLocked(achievementPassive100Image);
         SetImageLocked(achievementClickPower8Image);
         SetImageLocked(achievement10kPointsImage);
-        SetImageLocked(achievement2000PointsImage); // Initialize the new achievement image
+        SetImageLocked(achievement2000PointsImage);
     }
 
-    /// <summary>
-    /// Set an achievement image as locked (dimmed).
-    /// </summary>
-    /// <param name="image">The achievement image.</param>
+
     private void SetImageLocked(Image image)
     {
         if (image != null)
             image.color = new Color(0.2f, 0.2f, 0.2f, 0.2f);
     }
 
-    /// <summary>
-    /// Unlock an achievement and update its image.
-    /// </summary>
-    /// <param name="achievementImage">The achievement image to update.</param>
-    /// <param name="message">The message to display when unlocked.</param>
+
     private void UnlockAchievement(Image achievementImage, string message)
     {
         if (achievementImage != null)
@@ -173,9 +162,7 @@ public class Achievements : MonoBehaviour
         Debug.Log("Achievement unlocked: " + message);
     }
 
-    /// <summary>
-    /// Populate achievements list in the Scroll View.
-    /// </summary>
+
     private void PopulateAchievements()
     {
         string[] achievementDescriptions = {
@@ -188,7 +175,7 @@ public class Achievements : MonoBehaviour
             "Reach $100 passive income per second",
             "Multiply your click power by 8",
             "Earn a total of 10,000 points",
-            "Earn a total of 50,000 points" // New description
+            "Earn a total of 50,000 points"
         };
 
         foreach (var description in achievementDescriptions)
@@ -203,17 +190,13 @@ public class Achievements : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Show the achievements panel.
-    /// </summary>
+
     public void ShowAchievements()
     {
         achievementsPanel.SetActive(true);
     }
 
-    /// <summary>
-    /// Close the achievements panel.
-    /// </summary>
+
     public void CloseAchievements()
     {
         achievementsPanel.SetActive(false);
