@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +7,12 @@ public class Game : MonoBehaviour
 {
     public Text scoreText;
     public GameObject upgradesPanel; // Panel contenant les options d'amélioration
+    public GameObject hitPowerPanel; // Panel dédié au Hit Power
+    public Text hitPowerText; // Affichage de la puissance actuelle
+    public Text hitPowerCostText; // Affichage du coût pour améliorer le Hit Power
 
     private bool upgradesVisible = false;
+    private bool hitPowerVisible = false;
 
     public float currentScore;
     public float hitPower;
@@ -39,10 +42,11 @@ public class Game : MonoBehaviour
     public GameObject plusObject;
     public Text plusText;
 
-    public bool achievementScore;
-    public bool achievementShop;
-    public Image image1;
-    public Image image2;
+    public float hitPowerUpgradeCost = 50f; // Coût de l'amélioration du Hit Power
+
+    // Dernier objectif : variables
+    private bool lastObjectiveAchieved = false; // Pour s'assurer qu'il ne se déclenche qu'une fois
+    public float lastObjectiveScore = 1000000f; // Score cible pour l'objectif
 
     void Start()
     {
@@ -61,8 +65,11 @@ public class Game : MonoBehaviour
         upgradePrize = 50;
         allUpgradePrize = 500;
 
-        // Désactiver le panel des améliorations par défaut
+        // Désactiver les panneaux par défaut
         upgradesPanel.SetActive(false);
+        hitPowerPanel.SetActive(false);
+
+        UpdateHitPowerUI();
     }
 
     void Update()
@@ -86,30 +93,11 @@ public class Game : MonoBehaviour
             allUpgradeText.text = "Cost: " + allUpgradePrize + " $";
         }
 
-        if(currentScore >= 50)
+        // Vérification du dernier objectif
+        if (!lastObjectiveAchieved && currentScore >= lastObjectiveScore)
         {
-            achievementScore = true;
-        }
-        if(amount1 >= 2)
-        {
-            achievementShop = true;
-        }
-        if (achievementScore == true)
-        {
-            image1.color = new Color(1f, 1f, 1f, 1f);
-        }
-        else
-        {
-            image1.color = new Color(0.2f, 0.2f, 0.2f, 0.2f);
-        }
-
-        if (achievementShop == true)
-        {
-            image2.color = new Color(1f, 1f, 1f, 1f);
-        }
-        else
-        {
-            image2.color = new Color(0.2f, 0.2f, 0.2f, 0.2f);
+            lastObjectiveAchieved = true; // Marquer comme atteint
+            UnlockLastObjective();
         }
     }
 
@@ -138,6 +126,43 @@ public class Game : MonoBehaviour
     {
         upgradesVisible = false;
         upgradesPanel.SetActive(false);
+    }
+
+    public void ShowHitPowerPanel()
+    {
+        hitPowerVisible = true;
+        hitPowerPanel.SetActive(true);
+    }
+
+    public void CloseHitPowerPanel()
+    {
+        hitPowerVisible = false;
+        hitPowerPanel.SetActive(false);
+    }
+
+    public void IncreaseHitPower()
+    {
+        if (currentScore >= hitPowerUpgradeCost)
+        {
+            currentScore -= hitPowerUpgradeCost;
+            hitPower *= 2; // Double la puissance du Hit Power
+            hitPowerUpgradeCost *= 2; // Augmente le coût pour la prochaine amélioration
+
+            UpdateHitPowerUI();
+        }
+        else
+        {
+            Debug.Log("Pas assez de score pour améliorer le Hit Power !");
+        }
+    }
+
+    private void UpdateHitPowerUI()
+    {
+        if (hitPowerText != null)
+            hitPowerText.text = "Puissance actuelle : " + hitPower;
+
+        if (hitPowerCostText != null)
+            hitPowerCostText.text = "Coût : " + hitPowerUpgradeCost + " $";
     }
 
     public void Hit()
@@ -208,5 +233,14 @@ public class Game : MonoBehaviour
             plusObject.transform.position = new Vector3(plusObject.transform.position.x, plusObject.transform.position.y + 2, 0);
         }
         plusObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Débloque le dernier objectif et affiche un message de félicitations.
+    /// </summary>
+    private void UnlockLastObjective()
+    {
+        Debug.Log("Congratulations! You've achieved the final objective: 1 million score!");
+        // Ajouter ici une notification visuelle ou une récompense
     }
 }
