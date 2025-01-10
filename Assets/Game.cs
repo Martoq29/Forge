@@ -42,11 +42,11 @@ public class Game : MonoBehaviour
     public GameObject plusObject;
     public Text plusText;
 
-    public float hitPowerUpgradeCost = 50f; // Coût de l'amélioration du Hit Power
+    public float hitPowerUpgradeCost = 50f;
 
-    // Dernier objectif : variables
-    private bool lastObjectiveAchieved = false; // Pour s'assurer qu'il ne se déclenche qu'une fois
-    public float lastObjectiveScore = 1000000f; // Score cible pour l'objectif
+
+    private bool lastObjectiveAchieved = false;
+    public float lastObjectiveScore = 50000f;
 
     void Start()
     {
@@ -65,7 +65,7 @@ public class Game : MonoBehaviour
         upgradePrize = 50;
         allUpgradePrize = 500;
 
-        // Désactiver les panneaux par défaut
+
         upgradesPanel.SetActive(false);
         hitPowerPanel.SetActive(false);
 
@@ -74,18 +74,18 @@ public class Game : MonoBehaviour
 
     void Update()
     {
-        // Formater uniquement le currentScore avec les suffixes
+
         scoreText.text = FormatCurrentScore(currentScore) + "$";
 
         scoreIncreasePerSecond = x * Time.deltaTime;
         currentScore += scoreIncreasePerSecond;
 
-        // Afficher les autres valeurs sans suffixes
+
         shop1text.text = "Tier 1: " + shop1prize + " $";
         shop2text.text = "Tier 2: " + shop2prize + " $";
 
-        amount1Text.text = "Tier 1: " + amount1 + "  anvil: " + amount1Profit + "/s";
-        amount2Text.text = "Tier 2: " + amount2 + "  anvil: " + amount2Profit + "/s";
+        amount1Text.text = "Tier 1: " + amount1 + "  : " + amount1Profit + "/s";
+        amount2Text.text = "Tier 2: " + amount2 + "  : " + amount2Profit + "/s";
 
         if (upgradesVisible)
         {
@@ -93,10 +93,10 @@ public class Game : MonoBehaviour
             allUpgradeText.text = "Cost: " + allUpgradePrize + " $";
         }
 
-        // Vérification du dernier objectif
+
         if (!lastObjectiveAchieved && currentScore >= lastObjectiveScore)
         {
-            lastObjectiveAchieved = true; // Marquer comme atteint
+            lastObjectiveAchieved = true;
             UnlockLastObjective();
         }
     }
@@ -112,7 +112,7 @@ public class Game : MonoBehaviour
             magnitude++;
         }
 
-        // Retourner le score formaté avec un suffixe et une seule décimale
+
         return string.Format("{0:0.0}", number) + suffixes[magnitude];
     }
 
@@ -145,8 +145,8 @@ public class Game : MonoBehaviour
         if (currentScore >= hitPowerUpgradeCost)
         {
             currentScore -= hitPowerUpgradeCost;
-            hitPower *= 2; // Double la puissance du Hit Power
-            hitPowerUpgradeCost *= 2; // Augmente le coût pour la prochaine amélioration
+            hitPower *= 2;
+            hitPowerUpgradeCost *= 2;
 
             UpdateHitPowerUI();
         }
@@ -169,6 +169,8 @@ public class Game : MonoBehaviour
     {
         currentScore += hitPower;
 
+        plusText.text = "+" + hitPower.ToString();
+
         plusObject.SetActive(false);
 
         plusObject.transform.position = new Vector3(Random.Range(800, 1200 + 1), Random.Range(600, 700 + 1), 0);
@@ -178,6 +180,7 @@ public class Game : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(Fly());
     }
+
 
     public void Shop1()
     {
@@ -235,12 +238,10 @@ public class Game : MonoBehaviour
         plusObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Débloque le dernier objectif et affiche un message de félicitations.
-    /// </summary>
+
     private void UnlockLastObjective()
     {
-        Debug.Log("Congratulations! You've achieved the final objective: 1 million score!");
-        // Ajouter ici une notification visuelle ou une récompense
+        Debug.Log("Congratulations! You've achieved the final objective: 50k score!");
+
     }
 }
